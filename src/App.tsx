@@ -6,6 +6,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import Login from "@/pages/Login";
 import FarmerDashboard from "@/pages/FarmerDashboard";
+import DistributorDashboard from "@/pages/DistributorDashboard";
+import RetailerDashboard from "@/pages/RetailerDashboard";
+import Profile from "@/pages/Profile";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -22,8 +25,16 @@ function AppRoutes() {
   if (user?.role === 'farmer') {
     return <FarmerDashboard />;
   }
+  
+  if (user?.role === 'distributor') {
+    return <DistributorDashboard />;
+  }
+  
+  if (user?.role === 'retailer') {
+    return <RetailerDashboard />;
+  }
 
-  // Default fallback for other roles (to be implemented)
+  // Default fallback
   return <Index />;
 }
 
@@ -36,6 +47,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/*" element={<AppRoutes />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
