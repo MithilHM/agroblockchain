@@ -153,8 +153,21 @@ class AgriChainAPITester:
             response = self.make_request('POST', '/batch/register', batch_data, user_type='farmer')
             if response.status_code in [200, 201]:
                 data = response.json()
-                if data.get('success') and 'batch_id' in data.get('data', {}):
-                    batch_id = data['data']['batch_id']
+                if data.get('success'):
+                    # Handle different response formats
+                    batch_info = data.get('data', {})
+                    if isinstance(batch_info, dict):
+                        if 'batch_id' in batch_info:
+                            batch_id = batch_info['batch_id']
+                        elif 'batch' in batch_info and 'batch_id' in batch_info['batch']:
+                            batch_id = batch_info['batch']['batch_id']
+                        else:
+                            self.log("❌ No batch_id found in response", "ERROR")
+                            return None
+                    else:
+                        self.log("❌ Invalid response format", "ERROR")
+                        return None
+                        
                     self.test_data['test_batch_id'] = batch_id
                     self.log(f"✅ Test batch created: {batch_id}")
                     return batch_id
