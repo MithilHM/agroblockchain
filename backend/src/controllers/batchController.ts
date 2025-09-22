@@ -253,13 +253,13 @@ export class BatchController {
       }
 
       // Validate transfer logic (farmer -> distributor -> retailer)
-      const validTransfers = {
+      const validTransfers: Record<string, string[]> = {
         farmer: ['distributor'],
         distributor: ['retailer', 'distributor'],
         retailer: []
       };
 
-      if (!validTransfers[userRole as keyof typeof validTransfers]?.includes(recipient.role)) {
+      if (!validTransfers[userRole]?.includes(recipient.role)) {
         res.status(400).json({
           success: false,
           message: `${userRole} cannot transfer to ${recipient.role}`
