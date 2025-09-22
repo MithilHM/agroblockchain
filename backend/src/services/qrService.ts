@@ -8,7 +8,11 @@ import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
 export class QRService {
-  private batchRepository = AppDataSource.getRepository(ProduceBatch);
+  private batchRepository;
+
+  constructor() {
+    this.batchRepository = AppDataSource.getRepository(ProduceBatch);
+  }
 
   async generateQRCode(batch: ProduceBatch): Promise<{ url: string; data: string; filePath?: string }> {
     try {
