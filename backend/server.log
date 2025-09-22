@@ -1,6 +1,24 @@
-[INFO] 14:49:32 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.2)
-[dotenv@17.2.2] injecting env (19) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
-[32minfo[39m: ✅ Supabase connection established successfully {"service":"supply-chain-backend","timestamp":"2025-09-22 14:49:35"}
-[32minfo[39m: ✅ Server is running on port 8001 {"service":"supply-chain-backend","timestamp":"2025-09-22 14:49:35"}
-[32minfo[39m: 🔗 Local: http://localhost:8001 {"service":"supply-chain-backend","timestamp":"2025-09-22 14:49:35"}
-[32minfo[39m: 🌐 Environment: development {"service":"supply-chain-backend","timestamp":"2025-09-22 14:49:35"}
+
+> dev
+> ts-node-dev --respawn --transpile-only src/server.ts
+
+[INFO] 15:40:17 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.2)
+[dotenv@17.2.2] injecting env (19) from .env -- tip: 📡 auto-backup env with Radar: https://dotenvx.com/radar
+[32minfo[39m: ✅ Supabase connection established successfully {"service":"supply-chain-backend","timestamp":"2025-09-22 15:40:21"}
+[32minfo[39m: ✅ Server is running on port 8001 {"service":"supply-chain-backend","timestamp":"2025-09-22 15:40:21"}
+[32minfo[39m: 🔗 Local: http://localhost:8001 {"service":"supply-chain-backend","timestamp":"2025-09-22 15:40:21"}
+[32minfo[39m: 🌐 Environment: development {"service":"supply-chain-backend","timestamp":"2025-09-22 15:40:21"}
+[32minfo[39m: User registered: farmer.test@agrichain.com with role: farmer {"service":"supply-chain-backend","timestamp":"2025-09-22 15:42:16"}
+[32minfo[39m: User logged in: farmer.test@agrichain.com {"service":"supply-chain-backend","timestamp":"2025-09-22 15:42:17"}
+[32minfo[39m: User registered: distributor.test@agrichain.com with role: distributor {"service":"supply-chain-backend","timestamp":"2025-09-22 15:42:18"}
+[32minfo[39m: User logged in: distributor.test@agrichain.com {"service":"supply-chain-backend","timestamp":"2025-09-22 15:42:19"}
+[32minfo[39m: User registered: retailer.test@agrichain.com with role: retailer {"service":"supply-chain-backend","timestamp":"2025-09-22 15:42:20"}
+[32minfo[39m: User logged in: retailer.test@agrichain.com {"service":"supply-chain-backend","timestamp":"2025-09-22 15:42:21"}
+[32minfo[39m: Batch registered: AGRI-1758555741194-TJIXJIWNF by user 6a9121b6-d0e9-4cc1-a66d-622338fe835b {"service":"supply-chain-backend","timestamp":"2025-09-22 15:42:22"}
+[32minfo[39m: User 6a9121b6-d0e9-4cc1-a66d-622338fe835b updated wallet address to 0x742d35Cc6634C0532925a3b8D4C9db96590e4CAF {"service":"supply-chain-backend","timestamp":"2025-09-22 15:42:22"}
+[31merror[39m: Get distributors error: column users.status does not exist {"code":"42703","details":null,"hint":null,"service":"supply-chain-backend","timestamp":"2025-09-22 15:42:24"}
+[31merror[39m: Get distributor offers error: Could not find the table 'public.batch_offers' in the schema cache {"code":"PGRST205","details":null,"hint":"Perhaps you meant the table 'public.batch_transfers'","service":"supply-chain-backend","timestamp":"2025-09-22 15:42:25"}
+[31merror[39m: Get notifications error: Could not find the table 'public.notifications' in the schema cache {"code":"PGRST205","details":null,"hint":null,"service":"supply-chain-backend","timestamp":"2025-09-22 15:42:26"}
+[31merror[39m: Get notification preferences error: column users.metadata does not exist {"code":"42703","details":null,"hint":null,"service":"supply-chain-backend","timestamp":"2025-09-22 15:42:27"}
+[31merror[39m: Get user for preferences error: column users.metadata does not exist {"code":"42703","details":null,"hint":null,"service":"supply-chain-backend","timestamp":"2025-09-22 15:42:27"}
+[31merror[39m: Mark all notifications as read error: Could not find the table 'public.notifications' in the schema cache {"code":"PGRST205","details":null,"hint":null,"service":"supply-chain-backend","timestamp":"2025-09-22 15:42:27"}

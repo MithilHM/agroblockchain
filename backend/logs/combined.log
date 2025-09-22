@@ -130,3 +130,41 @@
 {"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 14:55:19"}
 {"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 14:55:19"}
 {"level":"warn","message":"Received SIGTERM, shutting down gracefully...","service":"supply-chain-backend","timestamp":"2025-09-22 14:55:33"}
+{"level":"info","message":"✅ Supabase connection established successfully","service":"supply-chain-backend","timestamp":"2025-09-22 15:22:11"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 15:22:11"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 15:22:11"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 15:22:11"}
+{"level":"info","message":"✅ Supabase connection established successfully","service":"supply-chain-backend","timestamp":"2025-09-22 15:24:18"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 15:24:18"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 15:24:18"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 15:24:18"}
+{"level":"info","message":"✅ Supabase connection established successfully","service":"supply-chain-backend","timestamp":"2025-09-22 15:37:08"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 15:37:08"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 15:37:08"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 15:37:08"}
+{"level":"info","message":"✅ Supabase connection established successfully","service":"supply-chain-backend","timestamp":"2025-09-22 15:37:08"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 15:37:08"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 15:37:08"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 15:37:08"}
+{"level":"info","message":"✅ Supabase connection established successfully","service":"supply-chain-backend","timestamp":"2025-09-22 15:37:19"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 15:37:19"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 15:37:19"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 15:37:19"}
+{"level":"info","message":"✅ Supabase connection established successfully","service":"supply-chain-backend","timestamp":"2025-09-22 15:40:21"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 15:40:21"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 15:40:21"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 15:40:21"}
+{"level":"info","message":"User registered: farmer.test@agrichain.com with role: farmer","service":"supply-chain-backend","timestamp":"2025-09-22 15:42:16"}
+{"level":"info","message":"User logged in: farmer.test@agrichain.com","service":"supply-chain-backend","timestamp":"2025-09-22 15:42:17"}
+{"level":"info","message":"User registered: distributor.test@agrichain.com with role: distributor","service":"supply-chain-backend","timestamp":"2025-09-22 15:42:18"}
+{"level":"info","message":"User logged in: distributor.test@agrichain.com","service":"supply-chain-backend","timestamp":"2025-09-22 15:42:19"}
+{"level":"info","message":"User registered: retailer.test@agrichain.com with role: retailer","service":"supply-chain-backend","timestamp":"2025-09-22 15:42:20"}
+{"level":"info","message":"User logged in: retailer.test@agrichain.com","service":"supply-chain-backend","timestamp":"2025-09-22 15:42:21"}
+{"level":"info","message":"Batch registered: AGRI-1758555741194-TJIXJIWNF by user 6a9121b6-d0e9-4cc1-a66d-622338fe835b","service":"supply-chain-backend","timestamp":"2025-09-22 15:42:22"}
+{"level":"info","message":"User 6a9121b6-d0e9-4cc1-a66d-622338fe835b updated wallet address to 0x742d35Cc6634C0532925a3b8D4C9db96590e4CAF","service":"supply-chain-backend","timestamp":"2025-09-22 15:42:22"}
+{"code":"42703","details":null,"hint":null,"level":"error","message":"Get distributors error: column users.status does not exist","service":"supply-chain-backend","timestamp":"2025-09-22 15:42:24"}
+{"code":"PGRST205","details":null,"hint":"Perhaps you meant the table 'public.batch_transfers'","level":"error","message":"Get distributor offers error: Could not find the table 'public.batch_offers' in the schema cache","service":"supply-chain-backend","timestamp":"2025-09-22 15:42:25"}
+{"code":"PGRST205","details":null,"hint":null,"level":"error","message":"Get notifications error: Could not find the table 'public.notifications' in the schema cache","service":"supply-chain-backend","timestamp":"2025-09-22 15:42:26"}
+{"code":"42703","details":null,"hint":null,"level":"error","message":"Get notification preferences error: column users.metadata does not exist","service":"supply-chain-backend","timestamp":"2025-09-22 15:42:27"}
+{"code":"42703","details":null,"hint":null,"level":"error","message":"Get user for preferences error: column users.metadata does not exist","service":"supply-chain-backend","timestamp":"2025-09-22 15:42:27"}
+{"code":"PGRST205","details":null,"hint":null,"level":"error","message":"Mark all notifications as read error: Could not find the table 'public.notifications' in the schema cache","service":"supply-chain-backend","timestamp":"2025-09-22 15:42:27"}
