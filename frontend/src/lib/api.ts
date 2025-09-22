@@ -24,6 +24,7 @@ class ApiClient {
   constructor() {
     this.baseUrl = API_BASE_URL;
     this.token = localStorage.getItem('authToken');
+    console.log('API Client initialized with base URL:', this.baseUrl);
   }
 
   setAuthToken(token: string | null) {
@@ -38,6 +39,12 @@ class ApiClient {
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
     
+    console.log('API Request:', {
+      url,
+      method: options.method || 'GET',
+      hasBody: !!options.body
+    });
+    
     const config: RequestInit = {
       headers: {
         'Content-Type': 'application/json',
@@ -47,14 +54,28 @@ class ApiClient {
       ...options,
     };
 
-    const response = await fetch(url, config);
-    
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: 'Request failed' }));
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-    }
+    try {
+      const response = await fetch(url, config);
+      
+      console.log('API Response:', {
+        status: response.status,
+        ok: response.ok,
+        url: response.url
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Request failed' }));
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
 
-    return response.json();
+      return response.json();
+    } catch (error) {
+      console.error('API Request Failed:', {
+        url,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+      throw error;
+    }
   }
 
   // Auth endpoints

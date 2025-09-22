@@ -30,3 +30,54 @@
 {"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 11:11:53"}
 {"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 11:11:53"}
 {"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 11:11:53"}
+{"code":"PGRST205","details":null,"hint":null,"level":"error","message":"❌ Error connecting to Supabase: Could not find the table 'public.users' in the schema cache","service":"supply-chain-backend","timestamp":"2025-09-22 17:28:25"}
+{"level":"warn","message":"⚠️  Continuing in development mode despite database issues...","service":"supply-chain-backend","timestamp":"2025-09-22 17:28:25"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 17:28:25"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 17:28:25"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 17:28:25"}
+{"code":"PGRST205","details":null,"hint":null,"level":"error","message":"❌ Error connecting to Supabase: Could not find the table 'public.users' in the schema cache","service":"supply-chain-backend","timestamp":"2025-09-22 17:32:39"}
+{"level":"warn","message":"⚠️  Continuing in development mode despite database issues...","service":"supply-chain-backend","timestamp":"2025-09-22 17:32:39"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 17:32:39"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 17:32:39"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 17:32:39"}
+{"code":"PGRST205","details":null,"hint":null,"level":"error","message":"User registration error: Could not find the table 'public.users' in the schema cache","service":"supply-chain-backend","timestamp":"2025-09-22 17:38:22"}
+{"code":"PGRST205","details":null,"hint":null,"level":"error","message":"❌ Error connecting to Supabase: Could not find the table 'public.users' in the schema cache","service":"supply-chain-backend","timestamp":"2025-09-22 17:41:07"}
+{"level":"warn","message":"⚠️  Continuing in development mode despite database issues...","service":"supply-chain-backend","timestamp":"2025-09-22 17:41:07"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 17:41:07"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 17:41:07"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 17:41:07"}
+{"code":"PGRST205","details":null,"hint":null,"level":"error","message":"❌ Error connecting to Supabase: Could not find the table 'public.users' in the schema cache","service":"supply-chain-backend","timestamp":"2025-09-22 17:53:12"}
+{"level":"warn","message":"⚠️  Continuing in development mode despite database issues...","service":"supply-chain-backend","timestamp":"2025-09-22 17:53:12"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 17:53:12"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 17:53:12"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 17:53:12"}
+{"level":"info","message":"✅ Supabase connection established successfully","service":"supply-chain-backend","timestamp":"2025-09-22 18:36:51"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 18:36:52"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 18:36:52"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 18:36:52"}
+{"level":"info","message":"User registered: farmer@test.com with role: farmer","service":"supply-chain-backend","timestamp":"2025-09-22 18:37:14"}
+{"level":"info","message":"User logged in: farmer@test.com","service":"supply-chain-backend","timestamp":"2025-09-22 18:37:36"}
+{"level":"info","message":"User registered: test@example.com with role: farmer","service":"supply-chain-backend","timestamp":"2025-09-22 18:55:57"}
+{"level":"info","message":"✅ Supabase connection established successfully","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:14"}
+{"level":"info","message":"✅ Supabase connection established successfully","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:14"}
+{"level":"info","message":"✅ Supabase connection established successfully","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:14"}
+{"level":"info","message":"✅ Supabase connection established successfully","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:14"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:15"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:15"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:15"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:15"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:15"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:15"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:15"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:15"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:15"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:15"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:15"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:15"}
+{"level":"info","message":"✅ Supabase connection established successfully","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:15"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:15"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:15"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:15"}
+{"level":"info","message":"User registered: test2@example.com with role: distributor","service":"supply-chain-backend","timestamp":"2025-09-22 19:08:22"}
+{"level":"info","message":"User registered: test@t.com with role: farmer","service":"supply-chain-backend","timestamp":"2025-09-22 19:13:08"}
+{"level":"info","message":"User registered: test@gmailll.com with role: farmer","service":"supply-chain-backend","timestamp":"2025-09-22 19:22:49"}
