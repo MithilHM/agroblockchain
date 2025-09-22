@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import { AppDataSource } from '../config/db';
 import { User, UserRole, UserStatus } from '../models/User';
 import { ProduceBatch } from '../models/ProduceBatch';
-import { AuditLog, AuditAction } from '../models/AuditLog';
+import { AuditLog, AuditAction } from '../models/Auditlog';
 import { generateToken, AuthenticatedRequest } from '../middlewares/auth';
 import { logger } from '../utils/logger';
 import { asyncHandler } from '../middlewares/errorHandler';
