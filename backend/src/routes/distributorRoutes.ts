@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import { distributorController } from '../controllers/distributorController';
-import { authenticateToken } from '../middlewares/auth';
+import { authenticate } from '../middlewares/auth';
 
 const router = Router();
 
 // Apply authentication middleware to all distributor routes
-router.use(authenticateToken);
+router.use(authenticate);
 
 // GET /api/distributor/available - Get available distributors for farmers
 router.get('/available', distributorController.getAvailableDistributors.bind(distributorController));
