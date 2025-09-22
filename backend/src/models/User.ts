@@ -18,22 +18,22 @@ export enum UserStatus {
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ unique: true })
-  email: string;
+  email!: string;
 
   @Column()
-  password: string;
+  password!: string;
 
   @Column()
-  name: string;
+  name!: string;
 
   @Column({ type: 'enum', enum: UserRole })
-  role: UserRole;
+  role!: UserRole;
 
   @Column({ type: 'enum', enum: UserStatus, default: UserStatus.ACTIVE })
-  status: UserStatus;
+  status!: UserStatus;
 
   @Column({ nullable: true })
   phone?: string;
