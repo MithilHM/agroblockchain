@@ -11,6 +11,7 @@ import RetailerDashboard from "@/pages/RetailerDashboard";
 import AdminDashboard from "@/pages/AdminDashboard";
 import RegulatorDashboard from "@/pages/RegulatorDashboard";
 import Profile from "@/pages/Profile";
+import EnhancedProfile from "@/pages/EnhancedProfile";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -58,6 +59,7 @@ const App = () => (
           <Routes>
             <Route path="/*" element={<AppRoutes />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/enhanced-profile" element={<EnhancedProfile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
