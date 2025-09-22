@@ -1,13 +1,17 @@
 import { Router } from 'express';
 import { batchController } from '../controllers/batchController';
-import { authenticate } from '../middlewares/auth';
+import { auth } from '../middlewares/auth';
 
 const router = Router();
 
-// Public route to get batch details
-router.get('/:batchId', batchController.getBatch.bind(batchController));
+// Protected routes (require authentication)
+router.post('/register', auth, batchController.registerBatch);
+router.post('/transfer/:batchId', auth, batchController.transferBatch);
+router.get('/my-batches', auth, batchController.getUserBatches);
+router.post('/generate-otp', auth, batchController.generateOTP);
+router.get('/potential-buyers', auth, batchController.getPotentialBuyers);
 
-// Protected routes
-router.post('/register', authenticate, batchController.registerBatch.bind(batchController));
+// Public routes (for QR code scanning)
+router.get('/:batchId', batchController.getBatch);
 
 export default router;
