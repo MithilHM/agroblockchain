@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { User } from './User';
-import { AuditLog } from './AuditLog';
+import { AuditLog } from './Auditlog';
 
 export enum BatchStatus {
   HARVESTED = 'harvested',
