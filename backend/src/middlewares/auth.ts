@@ -1,53 +1,81 @@
-// src/middlewares/auth.ts
-
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { AppError } from './errorHandler';
+import { config } from '../config/env';
+import { AppDataSource } from '../config/db';
+import { User, UserRole } from '../models/User';
 import { logger } from '../utils/logger';
 
-interface JwtPayload {
-  id: string;
-  role: string;
-  iat: number;
-  exp: number;
+export interface AuthenticatedRequest extends Request {
+  user?: User;
 }
 
-/**
- * Middleware to authenticate requests using JWT.
- * It verifies the token from the Authorization header and attaches the user to the request object.
- */
-export const authenticate = (
-  req: Request,
+export const generateToken = (userId: string): string => {
+  return jwt.sign({ userId }, config.jwt.secret, {
+    expiresIn: config.jwt.expire
+  });
+};
+
+export const authenticateToken = async (
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1];
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      throw new AppError('Authentication failed: No token provided.', 401);
+    if (!token) {
+      res.status(401).json({
+        success: false,
+        message: 'Access token required'
+      });
+      return;
     }
 
-    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, config.jwt.secret) as { userId: string };
+    
+    const userRepository = AppDataSource.getRepository(User);
+    const user = await userRepository.findOne({
+      where: { id: decoded.userId }
+    });
 
-    if (!process.env.JWT_SECRET) {
-      logger.error('JWT_SECRET is not defined in environment variables.');
-      throw new AppError('Server configuration error.', 500);
+    if (!user) {
+      res.status(401).json({
+        success: false,
+        message: 'Invalid token'
+      });
+      return;
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
-
-    // Attach user information to the request object
-    req.user = {
-      id: decoded.id,
-      role: decoded.role,
-    };
-
+    req.user = user;
     next();
   } catch (error) {
-    if (error instanceof jwt.JsonWebTokenError) {
-      return next(new AppError('Authentication failed: Invalid token.', 401));
-    }
-    next(error);
+    logger.error('Authentication error:', error);
+    res.status(401).json({
+      success: false,
+      message: 'Invalid token'
+    });
   }
+};
+
+export const requireRole = (roles: UserRole[]) => {
+  return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+    if (!req.user) {
+      res.status(401).json({
+        success: false,
+        message: 'Authentication required'
+      });
+      return;
+    }
+
+    if (!roles.includes(req.user.role)) {
+      res.status(403).json({
+        success: false,
+        message: 'Insufficient permissions'
+      });
+      return;
+    }
+
+    next();
+  };
 };

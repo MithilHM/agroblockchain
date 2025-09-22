@@ -1,64 +1,45 @@
-// src/middlewares/errorHandler.ts
-
 import { Request, Response, NextFunction } from 'express';
-import { ZodError } from 'zod';
 import { logger } from '../utils/logger';
 
-/**
- * Custom error class for application-specific errors.
- * @param {string} message - The error message.
- * @param {number} statusCode - The HTTP status code.
- */
-export class AppError extends Error {
-  public readonly statusCode: number;
-
-  constructor(message: string, statusCode: number) {
-    super(message);
-    this.statusCode = statusCode;
-    Object.setPrototypeOf(this, new.target.prototype); // Restore prototype chain
-    Error.captureStackTrace(this);
-  }
+export interface AppError extends Error {
+  statusCode?: number;
+  status?: string;
+  isOperational?: boolean;
 }
 
-/**
- * Global error handling middleware.
- * Catches all errors and sends a structured JSON response.
- */
 export const errorHandler = (
-  err: Error,
+  err: AppError,
   req: Request,
   res: Response,
   next: NextFunction
-) => {
-  // Log the error for debugging purposes
-  logger.error(err);
+): void => {
+  const { statusCode = 500, message } = err;
 
-  // Handle Zod validation errors
-  if (err instanceof ZodError) {
-    return res.status(400).json({
-      status: 'error',
-      message: 'Invalid input data',
-      errors: err.flatten().fieldErrors,
-    });
-  }
-
-  // Handle custom application errors
-  if (err instanceof AppError) {
-    return res.status(err.statusCode).json({
-      status: 'error',
-      message: err.message,
-    });
-  }
-
-  // Handle other unexpected errors
-  const statusCode = 500;
-  const message =
-    process.env.NODE_ENV === 'production'
-      ? 'An unexpected internal server error occurred.'
-      : err.message;
-
-  return res.status(statusCode).json({
-    status: 'error',
-    message,
+  logger.error({
+    error: message,
+    stack: err.stack,
+    url: req.url,
+    method: req.method,
+    ip: req.ip,
+    userAgent: req.get('User-Agent')
   });
+
+  res.status(statusCode).json({
+    success: false,
+    message: process.env.NODE_ENV === 'production' ? 'Something went wrong' : message,
+    ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
+  });
+};
+
+export const createError = (message: string, statusCode: number = 500): AppError => {
+  const error: AppError = new Error(message);
+  error.statusCode = statusCode;
+  error.isOperational = true;
+  return error;
+};
+
+export const asyncHandler = (fn: Function) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
 };
