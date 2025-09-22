@@ -36,6 +36,14 @@ function AppRoutes() {
     return <RetailerDashboard />;
   }
 
+  if (user?.role === 'admin') {
+    return <AdminDashboard />;
+  }
+
+  if (user?.role === 'regulator') {
+    return <RegulatorDashboard />;
+  }
+
   // Default fallback
   return <Index />;
 }
