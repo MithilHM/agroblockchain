@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { batchController } from '../controllers/batchController';
-import { authenticateToken } from '../middlewares/auth';
+import { authenticate } from '../middlewares/auth';
 
 const router = Router();
 
@@ -8,7 +8,6 @@ const router = Router();
 router.get('/:batchId', batchController.getBatch.bind(batchController));
 
 // Protected routes
-router.use(authenticateToken);
-router.post('/register', batchController.registerBatch.bind(batchController));
+router.post('/register', authenticate, batchController.registerBatch.bind(batchController));
 
 export default router;
