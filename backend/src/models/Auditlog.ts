@@ -15,10 +15,10 @@ export enum AuditAction {
 @Entity('audit_logs')
 export class AuditLog {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ type: 'enum', enum: AuditAction })
-  action: AuditAction;
+  action!: AuditAction;
 
   @Column({ type: 'json', nullable: true })
   details?: any;
