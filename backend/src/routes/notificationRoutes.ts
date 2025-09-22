@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import { notificationController } from '../controllers/notificationController';
-import { authenticateToken } from '../middlewares/auth';
+import { authenticate } from '../middlewares/auth';
 
 const router = Router();
 
 // All notification routes require authentication
-router.use(authenticateToken);
+router.use(authenticate);
 
 // GET /api/notifications - Get user notifications (with pagination and filtering)
 router.get('/', notificationController.getUserNotifications.bind(notificationController));
