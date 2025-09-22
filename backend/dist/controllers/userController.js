@@ -22,7 +22,7 @@ class UserController {
                 });
                 return;
             }
-            if (!['farmer', 'distributor', 'retailer'].includes(role)) {
+            if (!['farmer', 'distributor', 'retailer', 'admin', 'regulator'].includes(role)) {
                 res.status(400).json({
                     success: false,
                     message: 'Invalid role specified'

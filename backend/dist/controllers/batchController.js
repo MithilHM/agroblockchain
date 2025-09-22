@@ -8,6 +8,7 @@ const uuid_1 = require("uuid");
 const qrcode_1 = __importDefault(require("qrcode"));
 const supabase_1 = require("../config/supabase");
 const logger_1 = require("../utils/logger");
+const notificationController_1 = require("./notificationController");
 class BatchController {
     // Farmer registers a new produce batch
     async registerBatch(req, res) {
@@ -264,6 +265,8 @@ class BatchController {
                     timestamp: new Date().toISOString()
                 }
             ]);
+            // Send notifications
+            await notificationController_1.NotificationController.notifyBatchTransfer(userId, to_user_id, batchId, batch.product_name);
             res.status(200).json({
                 success: true,
                 message: 'Batch transferred successfully',
