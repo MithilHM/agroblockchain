@@ -1,0 +1,32 @@
+
+> supply-chain-backend@1.0.0 dev
+> ts-node-dev --respawn --transpile-only src/server.ts
+
+[INFO] 09:53:16 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.2)
+query: SELECT version()
+query: SELECT * FROM current_schema()
+query: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+query: START TRANSACTION
+query: SELECT * FROM current_schema()
+query: SELECT * FROM current_database()
+query: SELECT "table_schema", "table_name", obj_description(('"' || "table_schema" || '"."' || "table_name" || '"')::regclass, 'pg_class') AS table_comment FROM "information_schema"."tables" WHERE ("table_schema" = 'public' AND "table_name" = 'audit_logs') OR ("table_schema" = 'public' AND "table_name" = 'produce_batches') OR ("table_schema" = 'public' AND "table_name" = 'users')
+query: SELECT * FROM "information_schema"."tables" WHERE "table_schema" = 'public' AND "table_name" = 'typeorm_metadata'
+query: SELECT "n"."nspname", "t"."typname" FROM "pg_type" "t" INNER JOIN "pg_namespace" "n" ON "n"."oid" = "t"."typnamespace" WHERE "n"."nspname" = 'public' AND "t"."typname" = 'audit_logs_action_enum'
+query: CREATE TYPE "public"."audit_logs_action_enum" AS ENUM('batch_created', 'batch_transferred', 'status_updated', 'price_updated', 'file_uploaded', 'user_login', 'user_registered')
+query: CREATE TABLE "audit_logs" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "action" "public"."audit_logs_action_enum" NOT NULL, "details" json, "ipAddress" character varying, "userAgent" character varying, "userId" uuid, "batchId" uuid, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_1bb179d048bbc581caa3b013439" PRIMARY KEY ("id"))
+query: SELECT "n"."nspname", "t"."typname" FROM "pg_type" "t" INNER JOIN "pg_namespace" "n" ON "n"."oid" = "t"."typnamespace" WHERE "n"."nspname" = 'public' AND "t"."typname" = 'produce_batches_status_enum'
+query: CREATE TYPE "public"."produce_batches_status_enum" AS ENUM('harvested', 'in_transit', 'with_distributor', 'with_retailer', 'sold', 'expired')
+query: CREATE TABLE "produce_batches" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "batchId" character varying NOT NULL, "produceType" character varying NOT NULL, "origin" character varying NOT NULL, "status" "public"."produce_batches_status_enum" NOT NULL DEFAULT 'harvested', "currentPrice" numeric(18,2) NOT NULL, "quantity" numeric(10,2) NOT NULL, "unit" character varying NOT NULL, "description" character varying, "certifications" json, "qrCodeUrl" character varying, "images" json, "geolocation" json, "harvestDate" TIMESTAMP, "expiryDate" TIMESTAMP, "currentOwnerId" uuid NOT NULL, "originalFarmerId" character varying NOT NULL, "transferHistory" text array NOT NULL DEFAULT '{}', "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_d684d2fe818abdb89939ec8605a" UNIQUE ("batchId"), CONSTRAINT "PK_859021241b71e4d819ff01e1cf3" PRIMARY KEY ("id"))
+query: SELECT "n"."nspname", "t"."typname" FROM "pg_type" "t" INNER JOIN "pg_namespace" "n" ON "n"."oid" = "t"."typnamespace" WHERE "n"."nspname" = 'public' AND "t"."typname" = 'users_role_enum'
+query: SELECT "n"."nspname", "t"."typname" FROM "pg_type" "t" INNER JOIN "pg_namespace" "n" ON "n"."oid" = "t"."typnamespace" WHERE "n"."nspname" = 'public' AND "t"."typname" = 'users_status_enum'
+query: CREATE TYPE "public"."users_role_enum" AS ENUM('farmer', 'distributor', 'retailer', 'regulator', 'admin')
+query: CREATE TYPE "public"."users_status_enum" AS ENUM('active', 'inactive', 'suspended')
+query: CREATE TABLE "users" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "email" character varying NOT NULL, "password" character varying NOT NULL, "name" character varying NOT NULL, "role" "public"."users_role_enum" NOT NULL, "status" "public"."users_status_enum" NOT NULL DEFAULT 'active', "phone" character varying, "address" character varying, "walletAddress" character varying, "kycDocuments" json, "isVerified" boolean NOT NULL DEFAULT false, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE ("email"), CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))
+query: ALTER TABLE "audit_logs" ADD CONSTRAINT "FK_cfa83f61e4d27a87fcae1e025ab" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
+query: ALTER TABLE "audit_logs" ADD CONSTRAINT "FK_990761049c6d5acb73043307b10" FOREIGN KEY ("batchId") REFERENCES "produce_batches"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
+query: ALTER TABLE "produce_batches" ADD CONSTRAINT "FK_f96bdba4e73d0f551a0b46c027a" FOREIGN KEY ("currentOwnerId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
+query: COMMIT
+[32minfo[39m: ✅ Database connection established {"service":"supply-chain-api","timestamp":"2025-09-22T09:53:18.921Z"}
+[32minfo[39m: ✅ Server is running on port 8001 {"service":"supply-chain-api","timestamp":"2025-09-22T09:53:18.925Z"}
+[32minfo[39m: 🔗 Local: http://localhost:8001 {"service":"supply-chain-api","timestamp":"2025-09-22T09:53:18.926Z"}
+[32minfo[39m: 🔗 Health: http://localhost:8001/health {"service":"supply-chain-api","timestamp":"2025-09-22T09:53:18.926Z"}
