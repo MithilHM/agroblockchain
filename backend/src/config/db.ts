@@ -3,6 +3,7 @@ import { config } from './env';
 import { User } from '../models/User';
 import { ProduceBatch } from '../models/ProduceBatch';
 import { AuditLog } from '../models/Auditlog';
+import { databaseManager } from './database';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -20,7 +21,7 @@ export const AppDataSource = new DataSource({
 
 export const initializeDatabase = async (): Promise<void> => {
   try {
-    await AppDataSource.initialize();
+    await databaseManager.initialize();
     console.log('Database connection established successfully');
   } catch (error) {
     console.error('Error connecting to database:', error);
