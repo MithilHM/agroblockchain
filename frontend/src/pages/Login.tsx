@@ -34,7 +34,8 @@ export default function Login() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    password: ''
+    password: '',
+    wallet_address: ''
   });
   const { login, register, isLoading } = useAuth();
 
