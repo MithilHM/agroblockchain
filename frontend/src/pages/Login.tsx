@@ -55,7 +55,8 @@ export default function Login() {
     setFormData({
       name: '',
       email: '',
-      password: ''
+      password: '',
+      wallet_address: ''
     });
     setSelectedRole(null);
   };
