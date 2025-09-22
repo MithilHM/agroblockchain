@@ -70,3 +70,6 @@ export const generateToken = (userId: string, email: string, role: string): stri
     { expiresIn: config.jwt.expire }
   );
 };
+
+// Export auth as alias for authenticate for consistency
+export const auth = authenticate;
