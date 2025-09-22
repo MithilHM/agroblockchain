@@ -10,6 +10,7 @@ import time
 import signal
 import sys
 import os
+import httpx
 from typing import Dict, Any
 
 # Change to backend directory
@@ -17,6 +18,7 @@ os.chdir('/app/backend')
 
 # Global variable to track Node.js process
 node_process = None
+NODE_PORT = 8002
 
 def start_node_server():
     """Start the Node.js server in a separate process"""
@@ -54,36 +56,69 @@ node_thread = threading.Thread(target=start_node_server, daemon=True)
 node_thread.start()
 
 # Wait a moment for the server to start
-time.sleep(3)
+time.sleep(5)
 
-# Simple ASGI app that returns status
+# ASGI app that proxies to Node.js backend
 async def app(scope: Dict[str, Any], receive, send):
-    """Simple ASGI app that indicates Node.js backend is running"""
+    """ASGI app that proxies requests to Node.js backend"""
     
     if scope['type'] == 'http':
-        if scope['path'] == '/':
+        try:
+            # Construct the target URL
+            path = scope.get('path', '/')
+            query_string = scope.get('query_string', b'').decode()
+            if query_string:
+                url = f"http://localhost:{NODE_PORT}{path}?{query_string}"
+            else:
+                url = f"http://localhost:{NODE_PORT}{path}"
+            
+            # Get headers
+            headers = {}
+            for name, value in scope.get('headers', []):
+                headers[name.decode()] = value.decode()
+            
+            # Get method
+            method = scope.get('method', 'GET')
+            
+            # Get body if present
+            body = b''
+            if method in ['POST', 'PUT', 'PATCH']:
+                message = await receive()
+                if message.get('type') == 'http.request' and message.get('body'):
+                    body = message['body']
+            
+            # Make request to Node.js backend
+            async with httpx.AsyncClient() as client:
+                response = await client.request(
+                    method=method,
+                    url=url,
+                    headers=headers,
+                    content=body,
+                    timeout=30.0
+                )
+                
+                # Send response
+                await send({
+                    'type': 'http.response.start',
+                    'status': response.status_code,
+                    'headers': [(key.encode(), value.encode()) for key, value in response.headers.items()],
+                })
+                await send({
+                    'type': 'http.response.body',
+                    'body': response.content,
+                })
+                
+        except Exception as e:
+            print(f"❌ Proxy error: {e}")
             await send({
                 'type': 'http.response.start',
-                'status': 200,
+                'status': 502,
                 'headers': [(b'content-type', b'application/json')],
             })
             await send({
                 'type': 'http.response.body',
-                'body': b'{"status": "ok", "message": "Node.js backend is running on port 8001"}',
+                'body': f'{{"error": "Bad Gateway", "message": "Node.js backend unavailable: {str(e)}"}}'.encode(),
             })
-        else:
-            await send({
-                'type': 'http.response.start',
-                'status': 404,
-                'headers': [(b'content-type', b'application/json')],
-            })
-            await send({
-                'type': 'http.response.body',
-                'body': b'{"error": "Not found", "message": "Access Node.js API on port 8001"}',
-            })
-    else:
-        # Handle other protocols
-        pass
 
 # Handle shutdown
 def signal_handler(signum, frame):
