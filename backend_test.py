@@ -197,8 +197,13 @@ class AgriChainAPITester:
                 else:
                     self.log("❌ Wallet details response format invalid", "ERROR")
                     results['wallet_details'] = False
+            elif response.status_code == 404:
+                self.log("❌ Wallet details failed: User not found (possible database schema issue)", "ERROR")
+                results['wallet_details'] = False
             else:
                 self.log(f"❌ Wallet details failed: {response.status_code}", "ERROR")
+                if response.text:
+                    self.log(f"Response: {response.text}", "ERROR")
                 results['wallet_details'] = False
         except Exception as e:
             self.log(f"❌ Wallet details error: {e}", "ERROR")
