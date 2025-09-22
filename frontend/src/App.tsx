@@ -8,6 +8,8 @@ import Login from "@/pages/Login";
 import FarmerDashboard from "@/pages/FarmerDashboard";
 import DistributorDashboard from "@/pages/DistributorDashboard";
 import RetailerDashboard from "@/pages/RetailerDashboard";
+import AdminDashboard from "@/pages/AdminDashboard";
+import RegulatorDashboard from "@/pages/RegulatorDashboard";
 import Profile from "@/pages/Profile";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
