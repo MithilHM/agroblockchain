@@ -66,8 +66,8 @@ export const authenticate = (
 export const generateToken = (userId: string, email: string, role: string): string => {
   return jwt.sign(
     { userId, email, role },
-    config.jwt.secret,
-    { expiresIn: config.jwt.expire }
+    config.jwt.secret as string,
+    { expiresIn: config.jwt.expire as string }
   );
 };
 
