@@ -88,8 +88,8 @@ export class UserController {
       // Generate JWT token
       const token = jwt.sign(
         { userId: newUser.id, email: newUser.email, role: newUser.role },
-        config.jwt.secret,
-        { expiresIn: config.jwt.expire }
+        config.jwt.secret as string,
+        { expiresIn: config.jwt.expire as string }
       );
 
       res.status(201).json({
