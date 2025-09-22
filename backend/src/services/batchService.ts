@@ -1,7 +1,7 @@
 import { AppDataSource } from '../config/db';
 import { ProduceBatch, BatchStatus } from '../models/ProduceBatch';
 import { User } from '../models/User';
-import { AuditLog, AuditAction } from '../models/AuditLog';
+import { AuditLog, AuditAction } from '../models/Auditlog';
 import { v4 as uuidv4 } from 'uuid';
 import { logger } from '../utils/logger';
 
