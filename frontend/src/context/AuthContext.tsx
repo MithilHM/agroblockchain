@@ -74,10 +74,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const register = async (email: string, password: string, name: string, role: UserRole): Promise<boolean> => {
+  const register = async (email: string, password: string, name: string, role: UserRole, wallet_address?: string): Promise<boolean> => {
     try {
       setIsLoading(true);
-      const response = await apiClient.register(email, password, name, role);
+      const response = await apiClient.register(email, password, name, role, wallet_address);
       
       if (response.success && response.data) {
         setUser(response.data.user);
