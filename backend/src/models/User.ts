@@ -48,14 +48,14 @@ export class User {
   kycDocuments?: any;
 
   @Column({ default: false })
-  isVerified: boolean;
+  isVerified!: boolean;
 
   @OneToMany(() => ProduceBatch, batch => batch.currentOwner)
-  batches: ProduceBatch[];
+  batches!: ProduceBatch[];
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }
