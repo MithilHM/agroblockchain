@@ -194,6 +194,79 @@ class ApiClient {
   async getPotentialBuyers(): Promise<{ success: boolean; data: { buyers: User[] } }> {
     return this.request<{ success: boolean; data: { buyers: User[] } }>('/batch/potential-buyers');
   }
+
+  // Admin endpoints
+  async getAllUsers(): Promise<{ success: boolean; data: { users: any[]; total_count: number } }> {
+    return this.request<{ success: boolean; data: { users: any[]; total_count: number } }>('/admin/users');
+  }
+
+  async getSystemStats(): Promise<{ success: boolean; data: any }> {
+    return this.request<{ success: boolean; data: any }>('/admin/stats');
+  }
+
+  async updateUserStatus(userId: string, status: string): Promise<{ success: boolean; message: string; data: { user: User } }> {
+    return this.request<{ success: boolean; message: string; data: { user: User } }>(`/admin/users/${userId}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status }),
+    });
+  }
+
+  async getAuditLogs(page?: number, limit?: number): Promise<{ success: boolean; data: { audit_logs: any[]; page: number; limit: number } }> {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page.toString());
+    if (limit) params.append('limit', limit.toString());
+    const queryString = params.toString() ? `?${params}` : '';
+    
+    return this.request<{ success: boolean; data: { audit_logs: any[]; page: number; limit: number } }>(`/admin/audit-logs${queryString}`);
+  }
+
+  async verifyBatch(batchId: string, verificationData: {
+    quality_verified: boolean;
+    quality_notes: string;
+    inspector_certificate?: string;
+  }): Promise<{ success: boolean; message: string; data: any }> {
+    return this.request<{ success: boolean; message: string; data: any }>(`/admin/verify-batch/${batchId}`, {
+      method: 'POST',
+      body: JSON.stringify(verificationData),
+    });
+  }
+
+  // Notification endpoints
+  async getNotifications(unreadOnly?: boolean): Promise<{ success: boolean; data: { notifications: any[]; unread_count: number } }> {
+    const params = unreadOnly ? '?unread_only=true' : '';
+    return this.request<{ success: boolean; data: { notifications: any[]; unread_count: number } }>(`/notifications${params}`);
+  }
+
+  async markNotificationAsRead(notificationId: string): Promise<{ success: boolean; message: string }> {
+    return this.request<{ success: boolean; message: string }>(`/notifications/${notificationId}/read`, {
+      method: 'PUT',
+    });
+  }
+
+  // Generic request methods for direct API access
+  async get<T = any>(endpoint: string): Promise<T> {
+    return this.request<T>(endpoint);
+  }
+
+  async post<T = any>(endpoint: string, data?: any): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'POST',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+  }
+
+  async put<T = any>(endpoint: string, data?: any): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'PUT',
+      body: data ? JSON.stringify(data) : undefined,
+    });
+  }
+
+  async delete<T = any>(endpoint: string): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'DELETE',
+    });
+  }
 }
 
 export const apiClient = new ApiClient();
