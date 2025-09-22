@@ -13,6 +13,7 @@ export declare class UserController {
     login(req: Request, res: Response): Promise<void>;
     getProfile(req: Request, res: Response): Promise<void>;
     updateProfile(req: Request, res: Response): Promise<void>;
+    getDashboardStats(req: Request, res: Response): Promise<void>;
 }
 export declare const userController: UserController;
 //# sourceMappingURL=userController.d.ts.map

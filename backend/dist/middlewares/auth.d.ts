@@ -19,4 +19,5 @@ export declare const authenticate: (req: Request, res: Response, next: NextFunct
  * Generate JWT token for user
  */
 export declare const generateToken: (userId: string, email: string, role: string) => string;
+export declare const auth: (req: Request, res: Response, next: NextFunction) => void;
 //# sourceMappingURL=auth.d.ts.map

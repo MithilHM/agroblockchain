@@ -13,7 +13,7 @@ const logger_1 = require("../utils/logger");
 class UserController {
     async register(req, res) {
         try {
-            const { email, password, name, role } = req.body;
+            const { email, password, name, role, wallet_address } = req.body;
             // Validate input
             if (!email || !password || !name || !role) {
                 res.status(400).json({
@@ -56,11 +56,12 @@ class UserController {
                     password_hash: hashedPassword,
                     name,
                     role,
+                    wallet_address: wallet_address || null,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
                 }
             ])
-                .select('id, email, name, role, created_at')
+                .select('id, email, name, role, wallet_address, created_at')
                 .single();
             if (error) {
                 logger_1.logger.error('User registration error:', error);
@@ -80,7 +81,8 @@ class UserController {
                         id: newUser.id,
                         email: newUser.email,
                         name: newUser.name,
-                        role: newUser.role
+                        role: newUser.role,
+                        wallet_address: newUser.wallet_address
                     },
                     token
                 }
@@ -109,7 +111,7 @@ class UserController {
             // Get user from database
             const { data: user, error } = await supabase_1.supabaseAdmin
                 .from('users')
-                .select('id, email, name, role, password_hash')
+                .select('id, email, name, role, password_hash, wallet_address')
                 .eq('email', email)
                 .single();
             if (error || !user) {
@@ -138,7 +140,8 @@ class UserController {
                         id: user.id,
                         email: user.email,
                         name: user.name,
-                        role: user.role
+                        role: user.role,
+                        wallet_address: user.wallet_address
                     },
                     token
                 }
@@ -175,9 +178,34 @@ class UserController {
                 });
                 return;
             }
+            // Get user's batch statistics
+            const { data: batchStats } = await supabase_1.supabaseAdmin
+                .from('produce_batches')
+                .select('id, status')
+                .eq('current_owner_id', userId);
+            // Get transfer statistics
+            const { data: outboundTransfers } = await supabase_1.supabaseAdmin
+                .from('batch_transfers')
+                .select('id, price_transferred')
+                .eq('from_user_id', userId);
+            const { data: inboundTransfers } = await supabase_1.supabaseAdmin
+                .from('batch_transfers')
+                .select('id, price_transferred')
+                .eq('to_user_id', userId);
+            const totalOutboundSales = outboundTransfers?.reduce((sum, transfer) => sum + parseFloat(transfer.price_transferred || '0'), 0) || 0;
+            const totalInboundPurchases = inboundTransfers?.reduce((sum, transfer) => sum + parseFloat(transfer.price_transferred || '0'), 0) || 0;
             res.status(200).json({
                 success: true,
-                data: { user }
+                data: {
+                    user,
+                    statistics: {
+                        current_batches: batchStats?.length || 0,
+                        outbound_sales: outboundTransfers?.length || 0,
+                        inbound_purchases: inboundTransfers?.length || 0,
+                        total_sales_value: totalOutboundSales,
+                        total_purchase_value: totalInboundPurchases
+                    }
+                }
             });
         }
         catch (error) {
@@ -227,6 +255,96 @@ class UserController {
             res.status(500).json({
                 success: false,
                 message: 'Failed to update profile'
+            });
+        }
+    }
+    // Get dashboard statistics for each role
+    async getDashboardStats(req, res) {
+        try {
+            const userId = req.user?.userId;
+            const userRole = req.user?.role;
+            if (!userId) {
+                res.status(401).json({
+                    success: false,
+                    message: 'Unauthorized'
+                });
+                return;
+            }
+            let stats = {};
+            if (userRole === 'farmer') {
+                // Farmer statistics
+                const { data: totalBatches } = await supabase_1.supabaseAdmin
+                    .from('produce_batches')
+                    .select('id')
+                    .eq('current_owner_id', userId);
+                const { data: soldBatches } = await supabase_1.supabaseAdmin
+                    .from('batch_transfers')
+                    .select('price_transferred')
+                    .eq('from_user_id', userId);
+                const totalRevenue = soldBatches?.reduce((sum, transfer) => sum + parseFloat(transfer.price_transferred || '0'), 0) || 0;
+                stats = {
+                    total_batches_registered: totalBatches?.length || 0,
+                    batches_sold: soldBatches?.length || 0,
+                    total_revenue: totalRevenue,
+                    active_listings: totalBatches?.length || 0
+                };
+            }
+            else if (userRole === 'distributor') {
+                // Distributor statistics
+                const { data: currentInventory } = await supabase_1.supabaseAdmin
+                    .from('produce_batches')
+                    .select('id, price_per_unit, quantity')
+                    .eq('current_owner_id', userId);
+                const { data: purchases } = await supabase_1.supabaseAdmin
+                    .from('batch_transfers')
+                    .select('price_transferred')
+                    .eq('to_user_id', userId);
+                const { data: sales } = await supabase_1.supabaseAdmin
+                    .from('batch_transfers')
+                    .select('price_transferred')
+                    .eq('from_user_id', userId);
+                const totalPurchases = purchases?.reduce((sum, transfer) => sum + parseFloat(transfer.price_transferred || '0'), 0) || 0;
+                const totalSales = sales?.reduce((sum, transfer) => sum + parseFloat(transfer.price_transferred || '0'), 0) || 0;
+                stats = {
+                    current_inventory: currentInventory?.length || 0,
+                    total_purchases: purchases?.length || 0,
+                    total_sales: sales?.length || 0,
+                    purchase_value: totalPurchases,
+                    sales_value: totalSales,
+                    profit_margin: totalSales - totalPurchases
+                };
+            }
+            else if (userRole === 'retailer') {
+                // Retailer statistics
+                const { data: currentStock } = await supabase_1.supabaseAdmin
+                    .from('produce_batches')
+                    .select('id, price_per_unit, quantity')
+                    .eq('current_owner_id', userId);
+                const { data: purchases } = await supabase_1.supabaseAdmin
+                    .from('batch_transfers')
+                    .select('price_transferred')
+                    .eq('to_user_id', userId);
+                const totalPurchases = purchases?.reduce((sum, transfer) => sum + parseFloat(transfer.price_transferred || '0'), 0) || 0;
+                stats = {
+                    current_stock: currentStock?.length || 0,
+                    total_purchases: purchases?.length || 0,
+                    purchase_value: totalPurchases,
+                    ready_for_sale: currentStock?.filter(batch => batch.status === 'delivered')?.length || 0
+                };
+            }
+            res.status(200).json({
+                success: true,
+                data: {
+                    role: userRole,
+                    statistics: stats
+                }
+            });
+        }
+        catch (error) {
+            logger_1.logger.error('Get dashboard stats error:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Failed to get dashboard statistics'
             });
         }
     }
