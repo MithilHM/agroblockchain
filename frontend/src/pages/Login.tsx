@@ -47,7 +47,7 @@ export default function Login() {
       await login(formData.email, formData.password);
     } else {
       if (!selectedRole || !formData.name || !formData.email || !formData.password) return;
-      await register(formData.email, formData.password, formData.name, selectedRole);
+      await register(formData.email, formData.password, formData.name, selectedRole, formData.wallet_address);
     }
   };
 
