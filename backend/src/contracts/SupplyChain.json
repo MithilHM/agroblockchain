@@ -1,13 +1,17 @@
 {
-  "contractName": "SupplyChain",
   "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
     {
       "anonymous": false,
       "inputs": [
         {
           "indexed": true,
           "internalType": "string",
-          "name": "produceId",
+          "name": "batchId",
           "type": "string"
         },
         {
@@ -15,124 +19,21 @@
           "internalType": "address",
           "name": "farmer",
           "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "origin",
-          "type": "string"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "price",
-          "type": "uint256"
         }
       ],
       "name": "BatchRegistered",
       "type": "event"
     },
     {
-      "anonymous": false,
       "inputs": [
         {
-          "indexed": true,
           "internalType": "string",
-          "name": "produceId",
+          "name": "_batchId",
           "type": "string"
         },
         {
-          "indexed": true,
-          "internalType": "address",
-          "name": "from",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "timestamp",
-          "type": "uint256"
-        }
-      ],
-      "name": "OwnershipTransferred",
-      "type": "event"
-    },
-    {
-      "inputs": [
-        {
           "internalType": "string",
-          "name": "_produceId",
-          "type": "string"
-        }
-      ],
-      "name": "getBatchDetails",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "string",
-              "name": "produceId",
-              "type": "string"
-            },
-            {
-              "internalType": "string",
-              "name": "origin",
-              "type": "string"
-            },
-            {
-              "internalType": "address",
-              "name": "currentOwner",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-            },
-            {
-              "internalType": "enum SupplyChain.BatchStatus",
-              "name": "status",
-              "type": "uint8"
-            }
-          ],
-          "internalType": "struct SupplyChain.ProduceBatch",
-          "name": "",
-          "type": "tuple"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "_produceId",
-          "type": "string"
-        }
-      ],
-      "name": "getOwnershipHistory",
-      "outputs": [
-        {
-          "internalType": "address[]",
-          "name": "",
-          "type": "address[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "_produceId",
+          "name": "_produceType",
           "type": "string"
         },
         {
@@ -147,24 +48,6 @@
         }
       ],
       "name": "registerBatch",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "_produceId",
-          "type": "string"
-        },
-        {
-          "internalType": "address",
-          "name": "_newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "transferOwnership",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
