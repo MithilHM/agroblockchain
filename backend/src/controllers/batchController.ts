@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import QRCode from 'qrcode';
 import { supabaseAdmin } from '../config/supabase';
 import { logger } from '../utils/logger';
+import { NotificationController } from './notificationController';
 
 interface BatchData {
   id?: string;
