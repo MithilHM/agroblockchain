@@ -44,5 +44,5 @@ export class AuditLog {
   batchId?: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 }
