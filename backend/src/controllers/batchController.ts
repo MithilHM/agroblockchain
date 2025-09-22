@@ -316,6 +316,9 @@ export class BatchController {
           }
         ]);
 
+      // Send notifications
+      await NotificationController.notifyBatchTransfer(userId, to_user_id, batchId, batch.product_name);
+
       res.status(200).json({
         success: true,
         message: 'Batch transferred successfully',
