@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
     port: 3000,
     strictPort: true,
     cors: true,
-    allowedHosts: ["farmblockchain.preview.emergentagent.com", "localhost", "127.0.0.1"]
+    allowedHosts: ["blockfarm-1.preview.emergentagent.com", "farmblockchain.preview.emergentagent.com", "localhost", "127.0.0.1"]
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
