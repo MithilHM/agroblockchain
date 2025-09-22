@@ -1,0 +1,32 @@
+{"code":"PGRST205","details":null,"hint":null,"level":"error","message":"❌ Error connecting to Supabase: Could not find the table 'public.users' in the schema cache","service":"supply-chain-backend","timestamp":"2025-09-22 09:06:13"}
+{"code":"PGRST205","details":null,"hint":null,"level":"error","message":"❌ Error connecting to Supabase: Could not find the table 'public.users' in the schema cache","service":"supply-chain-backend","timestamp":"2025-09-22 09:06:25"}
+{"code":"PGRST205","details":null,"hint":null,"level":"error","message":"❌ Error connecting to Supabase: Could not find the table 'public.users' in the schema cache","service":"supply-chain-backend","timestamp":"2025-09-22 09:06:37"}
+{"level":"info","message":"🔧 Creating database tables...","service":"supply-chain-backend","timestamp":"2025-09-22 09:07:59"}
+{"level":"info","message":"✅ Users table already exists or is accessible","service":"supply-chain-backend","timestamp":"2025-09-22 09:08:01"}
+{"code":"PGRST205","details":null,"hint":null,"level":"error","message":"❌ Error connecting to Supabase: Could not find the table 'public.users' in the schema cache","service":"supply-chain-backend","timestamp":"2025-09-22 09:09:02"}
+{"level":"warn","message":"⚠️  Continuing in development mode despite database issues...","service":"supply-chain-backend","timestamp":"2025-09-22 09:09:02"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 09:09:02"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 09:09:02"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 09:09:02"}
+{"level":"warn","message":"Received SIGTERM, shutting down gracefully...","service":"supply-chain-backend","timestamp":"2025-09-22 09:09:07"}
+{"code":"PGRST205","details":null,"hint":null,"level":"error","message":"❌ Error connecting to Supabase: Could not find the table 'public.users' in the schema cache","service":"supply-chain-backend","timestamp":"2025-09-22 09:09:15"}
+{"level":"warn","message":"⚠️  Continuing in development mode despite database issues...","service":"supply-chain-backend","timestamp":"2025-09-22 09:09:15"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 09:09:15"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 09:09:15"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 09:09:15"}
+{"level":"warn","message":"Received SIGTERM, shutting down gracefully...","service":"supply-chain-backend","timestamp":"2025-09-22 09:15:18"}
+{"code":"PGRST205","details":null,"hint":null,"level":"error","message":"❌ Error connecting to Supabase: Could not find the table 'public.users' in the schema cache","service":"supply-chain-backend","timestamp":"2025-09-22 09:16:44"}
+{"level":"warn","message":"⚠️  Continuing in development mode despite database issues...","service":"supply-chain-backend","timestamp":"2025-09-22 09:16:44"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 09:16:44"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 09:16:44"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 09:16:44"}
+{"code":"PGRST205","details":null,"hint":null,"level":"error","message":"❌ Error connecting to Supabase: Could not find the table 'public.users' in the schema cache","service":"supply-chain-backend","timestamp":"2025-09-22 10:12:59"}
+{"level":"warn","message":"⚠️  Continuing in development mode despite database issues...","service":"supply-chain-backend","timestamp":"2025-09-22 10:12:59"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 10:12:59"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 10:12:59"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 10:12:59"}
+{"code":"PGRST205","details":null,"hint":null,"level":"error","message":"❌ Error connecting to Supabase: Could not find the table 'public.users' in the schema cache","service":"supply-chain-backend","timestamp":"2025-09-22 11:11:53"}
+{"level":"warn","message":"⚠️  Continuing in development mode despite database issues...","service":"supply-chain-backend","timestamp":"2025-09-22 11:11:53"}
+{"level":"info","message":"✅ Server is running on port 8001","service":"supply-chain-backend","timestamp":"2025-09-22 11:11:53"}
+{"level":"info","message":"🔗 Local: http://localhost:8001","service":"supply-chain-backend","timestamp":"2025-09-22 11:11:53"}
+{"level":"info","message":"🌐 Environment: development","service":"supply-chain-backend","timestamp":"2025-09-22 11:11:53"}

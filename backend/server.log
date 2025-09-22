@@ -1,0 +1,13 @@
+
+> dev
+> ts-node-dev --respawn --transpile-only src/server.ts
+
+[INFO] 09:09:13 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.2)
+[dotenv@17.2.2] injecting env (19) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+[31merror[39m: ❌ Error connecting to Supabase: Could not find the table 'public.users' in the schema cache {"code":"PGRST205","details":null,"hint":null,"service":"supply-chain-backend","timestamp":"2025-09-22 09:09:15"}
+[33mwarn[39m: ⚠️  Continuing in development mode despite database issues... {"service":"supply-chain-backend","timestamp":"2025-09-22 09:09:15"}
+[32minfo[39m: ✅ Server is running on port 8001 {"service":"supply-chain-backend","timestamp":"2025-09-22 09:09:15"}
+[32minfo[39m: 🔗 Local: http://localhost:8001 {"service":"supply-chain-backend","timestamp":"2025-09-22 09:09:15"}
+[32minfo[39m: 🌐 Environment: development {"service":"supply-chain-backend","timestamp":"2025-09-22 09:09:15"}
+[33mwarn[39m: Received SIGTERM, shutting down gracefully... {"service":"supply-chain-backend","timestamp":"2025-09-22 09:15:18"}
+[32minfo[39m: Server closed. {"service":"supply-chain-backend","timestamp":"2025-09-22 09:15:18"}
