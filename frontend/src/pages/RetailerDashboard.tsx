@@ -1,89 +1,127 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { QrCode, Eye, Wallet, User, ShoppingCart, Package } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-
-interface InventoryItem {
-  id: string;
-  batchId: string;
-  distributorId: string;
-  distributorName: string;
-  cropType: string;
-  weight: number;
-  receivedDate: string;
-  expiryDate: string;
-  status: 'received' | 'in-stock' | 'sold';
-  sellPrice: number;
-}
-
-// Mock data
-const mockInventory: InventoryItem[] = [
-  {
-    id: 'INV001',
-    batchId: 'BTH001',
-    distributorId: 'D001',
-    distributorName: 'Fresh Distribution Co.',
-    cropType: 'Apples',
-    weight: 150,
-    receivedDate: '2024-01-17',
-    expiryDate: '2024-02-15',
-    status: 'in-stock',
-    sellPrice: 4.50
-  },
-  {
-    id: 'INV002',
-    batchId: 'BTH005',
-    distributorId: 'D002',
-    distributorName: 'Green Supply Chain',
-    cropType: 'Bananas',
-    weight: 80,
-    receivedDate: '2024-01-16',
-    expiryDate: '2024-01-25',
-    status: 'received',
-    sellPrice: 3.20
-  },
-  {
-    id: 'INV003',
-    batchId: 'BTH003',
-    distributorId: 'D001',
-    distributorName: 'Fresh Distribution Co.',
-    cropType: 'Oranges',
-    weight: 120,
-    receivedDate: '2024-01-12',
-    expiryDate: '2024-02-10',
-    status: 'sold',
-    sellPrice: 5.00
-  }
-];
+import { apiClient, Batch } from '@/lib/api';
+import { QrCode, Eye, Wallet, User as UserIcon, Package, Store, DollarSign, ShoppingCart, CheckCircle, LogOut } from 'lucide-react';
 
 export default function RetailerDashboard() {
   const { user, logout } = useAuth();
   const { toast } = useToast();
-  const [inventory] = useState<InventoryItem[]>(mockInventory);
+  
+  const [batches, setBatches] = useState<Batch[]>([]);
+  const [statistics, setStatistics] = useState<any>({});
+  const [isLoading, setIsLoading] = useState(false);
   const [showQRScanner, setShowQRScanner] = useState(false);
+  const [showBatchDetails, setShowBatchDetails] = useState(false);
+  const [selectedBatch, setSelectedBatch] = useState<Batch | null>(null);
+  const [qrInput, setQrInput] = useState('');
+  const [batchDetails, setBatchDetails] = useState<any>(null);
 
-  const mockBalance = 1850.25;
+  useEffect(() => {
+    loadData();
+  }, []);
 
-  const handleScanQR = () => {
-    setShowQRScanner(true);
-    // Mock QR scan result after 2 seconds
-    setTimeout(() => {
-      setShowQRScanner(false);
+  const loadData = async () => {
+    try {
+      setIsLoading(true);
+      
+      const [batchesRes, statsRes] = await Promise.all([
+        apiClient.getUserBatches(),
+        apiClient.getDashboardStats()
+      ]);
+      
+      if (batchesRes.success) {
+        setBatches(batchesRes.data.current_batches);
+      }
+      
+      if (statsRes.success) {
+        setStatistics(statsRes.data.statistics);
+      }
+    } catch (error) {
       toast({
-        title: "Delivery Confirmed",
-        description: "Batch BTH006 - Lettuce (45kg) received from Metro Distribution",
+        title: "Error",
+        description: "Failed to load dashboard data",
+        variant: "destructive"
       });
-    }, 2000);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleScanQR = async () => {
+    if (!qrInput.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a batch ID to scan/verify",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await apiClient.getBatch(qrInput.trim());
+      
+      if (response.success) {
+        const batch = response.data.batch;
+        const transferHistory = response.data.transfer_history;
+        
+        setBatchDetails({ batch, transferHistory });
+        setShowBatchDetails(true);
+        
+        toast({
+          title: "QR Code Verified ✓",
+          description: `Batch: ${batch.product_name} from ${batch.origin_farm}`,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Invalid batch ID or batch not found",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+      setShowQRScanner(false);
+      setQrInput('');
+    }
+  };
+
+  const handleMarkAsSold = async (batch: Batch) => {
+    try {
+      setIsLoading(true);
+      
+      // In a real implementation, you might want to track consumer sales
+      // For now, we'll just show a success message
+      toast({
+        title: "Success",
+        description: `${batch.product_name} batch marked as sold to consumer`,
+      });
+      
+      // Refresh data
+      loadData();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to mark batch as sold",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'received': return 'bg-blue-500';
-      case 'in-stock': return 'bg-green-500';
+      case 'harvested': return 'bg-green-500';
+      case 'in_transit': return 'bg-yellow-500';
+      case 'delivered': return 'bg-blue-500';
       case 'sold': return 'bg-gray-500';
       default: return 'bg-gray-500';
     }
@@ -91,16 +129,12 @@ export default function RetailerDashboard() {
 
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
-      case 'received': return 'default';
-      case 'in-stock': return 'secondary';
-      case 'sold': return 'outline';
+      case 'harvested': return 'default';
+      case 'in_transit': return 'secondary';
+      case 'delivered': return 'outline';
       default: return 'default';
     }
   };
-
-  const totalValue = inventory
-    .filter(item => item.status !== 'sold')
-    .reduce((sum, item) => sum + (item.weight * item.sellPrice), 0);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
@@ -110,7 +144,7 @@ export default function RetailerDashboard() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <ShoppingCart className="h-6 w-6 text-primary" />
+                <Store className="h-6 w-6 text-primary" />
                 <h1 className="text-2xl font-bold text-foreground">Retailer Dashboard</h1>
               </div>
             </div>
@@ -118,15 +152,16 @@ export default function RetailerDashboard() {
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2 px-3 py-2 bg-gradient-primary rounded-lg text-white">
                 <Wallet className="h-4 w-4" />
-                <span className="font-semibold">${mockBalance.toFixed(2)}</span>
+                <span className="font-semibold">${(statistics.purchase_value || 0).toFixed(2)}</span>
               </div>
               
               <div className="flex items-center space-x-2 px-3 py-2 bg-card rounded-lg border">
-                <User className="h-4 w-4" />
+                <UserIcon className="h-4 w-4" />
                 <span className="font-medium">{user?.name}</span>
               </div>
               
               <Button variant="outline" onClick={logout}>
+                <LogOut className="h-4 w-4 mr-2" />
                 Logout
               </Button>
             </div>
@@ -135,38 +170,53 @@ export default function RetailerDashboard() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {/* Statistics */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Inventory</CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{inventory.filter(i => i.status !== 'sold').length}</div>
-              <p className="text-xs text-muted-foreground">Active items</p>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Current Stock</p>
+                  <p className="text-2xl font-bold">{statistics.current_stock || 0}</p>
+                </div>
+                <Package className="h-8 w-8 text-blue-600" />
+              </div>
             </CardContent>
           </Card>
-
+          
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Inventory Value</CardTitle>
-              <Wallet className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">${totalValue.toFixed(2)}</div>
-              <p className="text-xs text-muted-foreground">Current stock value</p>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Total Purchases</p>
+                  <p className="text-2xl font-bold">{statistics.total_purchases || 0}</p>
+                </div>
+                <ShoppingCart className="h-8 w-8 text-green-600" />
+              </div>
             </CardContent>
           </Card>
-
+          
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Items Sold</CardTitle>
-              <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{inventory.filter(i => i.status === 'sold').length}</div>
-              <p className="text-xs text-muted-foreground">This month</p>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Purchase Value</p>
+                  <p className="text-2xl font-bold">${(statistics.purchase_value || 0).toFixed(2)}</p>
+                </div>
+                <DollarSign className="h-8 w-8 text-purple-600" />
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Ready for Sale</p>
+                  <p className="text-2xl font-bold">{statistics.ready_for_sale || 0}</p>
+                </div>
+                <CheckCircle className="h-8 w-8 text-orange-600" />
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -176,13 +226,12 @@ export default function RetailerDashboard() {
           <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
           <div className="flex space-x-4">
             <Button 
-              onClick={handleScanQR} 
+              onClick={() => setShowQRScanner(true)} 
               className="flex items-center space-x-2"
               variant="gradient"
-              disabled={showQRScanner}
             >
               <QrCode className="h-4 w-4" />
-              <span>{showQRScanner ? 'Scanning...' : 'Scan QR Code'}</span>
+              <span>Scan QR Code for Consumer</span>
             </Button>
             
             <Button variant="outline" className="flex items-center space-x-2">
@@ -192,75 +241,85 @@ export default function RetailerDashboard() {
           </div>
         </div>
 
-        <Separator className="mb-8" />
-
-        {/* Inventory */}
+        {/* Current Stock */}
         <div>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold">Inventory ({inventory.length})</h2>
+            <h2 className="text-xl font-semibold">Current Stock ({batches.length})</h2>
           </div>
 
-          {inventory.length === 0 ? (
+          {batches.length === 0 ? (
             <Card className="text-center py-12">
               <CardContent>
                 <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">No inventory items yet</p>
+                <h3 className="text-lg font-semibold text-foreground mb-2">No Stock Available</h3>
+                <p className="text-muted-foreground">Purchase products from distributors to start building your inventory</p>
               </CardContent>
             </Card>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {inventory.map((item) => (
-                <Card key={item.id} className="hover:shadow-md transition-shadow">
+              {batches.map((batch) => (
+                <Card key={batch.id} className="hover:shadow-md transition-shadow">
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{item.cropType}</CardTitle>
-                      <Badge variant={getStatusBadgeVariant(item.status)}>
-                        {item.status}
+                      <CardTitle className="text-lg">{batch.product_name}</CardTitle>
+                      <Badge variant={getStatusBadgeVariant(batch.status)} className={`${getStatusColor(batch.status)} text-white`}>
+                        {batch.status.replace('_', ' ').toUpperCase()}
                       </Badge>
                     </div>
-                    <CardDescription>Batch: {item.batchId}</CardDescription>
+                    <CardDescription>Batch ID: {batch.batch_id}</CardDescription>
                   </CardHeader>
                   
                   <CardContent className="space-y-3">
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <div>
-                        <p className="text-muted-foreground">Weight</p>
-                        <p className="font-medium">{item.weight} kg</p>
+                        <p className="text-muted-foreground">Quantity</p>
+                        <p className="font-medium">{batch.quantity} {batch.unit}</p>
                       </div>
                       <div>
-                        <p className="text-muted-foreground">Price/kg</p>
-                        <p className="font-medium">${item.sellPrice}</p>
+                        <p className="text-muted-foreground">Total Value</p>
+                        <p className="font-medium">${(batch.quantity * batch.price_per_unit).toFixed(2)}</p>
                       </div>
                     </div>
                     
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <div>
-                        <p className="text-muted-foreground">Received</p>
-                        <p className="font-medium">{new Date(item.receivedDate).toLocaleDateString()}</p>
+                        <p className="text-muted-foreground">Origin</p>
+                        <p className="font-medium">{batch.origin_farm}</p>
                       </div>
                       <div>
-                        <p className="text-muted-foreground">Expires</p>
-                        <p className="font-medium">{new Date(item.expiryDate).toLocaleDateString()}</p>
+                        <p className="text-muted-foreground">Quality</p>
+                        <p className="font-medium">{batch.quality_grade || 'Standard'}</p>
                       </div>
                     </div>
                     
-                    <div className="text-sm">
-                      <p className="text-muted-foreground">Distributor</p>
-                      <p className="font-medium">{item.distributorName}</p>
-                    </div>
-                    
-                    <div className="pt-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="w-full"
-                        onClick={() => toast({
-                          title: "Item Details",
-                          description: `Total Value: $${(item.weight * item.sellPrice).toFixed(2)}`,
-                        })}
-                      >
-                        View Details
-                      </Button>
+                    <div className="pt-2 space-y-2">
+                      <div className="flex space-x-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="flex-1"
+                          onClick={() => {
+                            setSelectedBatch(batch);
+                            setBatchDetails({ batch, transferHistory: [] });
+                            setShowBatchDetails(true);
+                          }}
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          Details
+                        </Button>
+                        
+                        {batch.status === 'delivered' && (
+                          <Button 
+                            variant="gradient" 
+                            size="sm"
+                            className="flex-1"
+                            onClick={() => handleMarkAsSold(batch)}
+                          >
+                            <CheckCircle className="h-4 w-4 mr-1" />
+                            Mark Sold
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -269,22 +328,141 @@ export default function RetailerDashboard() {
           )}
         </div>
 
-        {/* QR Scanner Mock */}
-        {showQRScanner && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <Card className="w-80">
-              <CardHeader>
-                <CardTitle>Scanning QR Code...</CardTitle>
-              </CardHeader>
-              <CardContent className="text-center py-8">
-                <div className="animate-pulse">
-                  <QrCode className="h-16 w-16 mx-auto mb-4 text-primary" />
-                  <p className="text-muted-foreground">Point your camera at the QR code</p>
+        {/* QR Scanner Dialog */}
+        <Dialog open={showQRScanner} onOpenChange={setShowQRScanner}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Scan QR Code for Consumer Verification</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Scan the QR code to show consumers the complete journey of their produce from farm to store.
+              </p>
+              
+              <div className="space-y-2">
+                <Label htmlFor="qr-input">Enter Batch ID</Label>
+                <Input
+                  id="qr-input"
+                  placeholder="Enter batch ID or scan QR code"
+                  value={qrInput}
+                  onChange={(e) => setQrInput(e.target.value)}
+                />
+              </div>
+              
+              <div className="flex space-x-3">
+                <Button 
+                  onClick={handleScanQR} 
+                  variant="gradient" 
+                  disabled={isLoading}
+                  className="flex-1"
+                >
+                  {isLoading ? 'Verifying...' : 'Show Journey'}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setShowQRScanner(false)}
+                  className="flex-1"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Batch Details Dialog */}
+        <Dialog open={showBatchDetails} onOpenChange={setShowBatchDetails}>
+          <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Supply Chain Journey - {batchDetails?.batch?.batch_id}</DialogTitle>
+            </DialogHeader>
+            
+            {batchDetails && (
+              <div className="space-y-6">
+                {/* Batch Information */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Product Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Product</p>
+                        <p className="text-lg font-semibold">{batchDetails.batch.product_name}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Origin Farm</p>
+                        <p className="text-lg font-semibold">{batchDetails.batch.origin_farm}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Harvest Date</p>
+                        <p className="font-medium">{new Date(batchDetails.batch.harvest_date).toLocaleDateString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Quantity</p>
+                        <p className="font-medium">{batchDetails.batch.quantity} {batchDetails.batch.unit}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Quality Grade</p>
+                        <p className="font-medium">{batchDetails.batch.quality_grade || 'Standard'}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Blockchain Hash</p>
+                        <p className="font-mono text-xs break-all">{batchDetails.batch.blockchain_hash}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Transfer History */}
+                {batchDetails.transferHistory && batchDetails.transferHistory.length > 0 && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg">Supply Chain Journey</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {batchDetails.transferHistory.map((transfer: any, index: number) => (
+                          <div key={transfer.id} className="flex items-start space-x-4 pb-4 border-b last:border-b-0">
+                            <div className="bg-primary/10 p-2 rounded-full">
+                              <Package className="h-4 w-4 text-primary" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-medium">
+                                Transfer from {transfer.from_user?.name} ({transfer.from_user?.role}) 
+                                to {transfer.to_user?.name} ({transfer.to_user?.role})
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                Price: ${transfer.price_transferred} | 
+                                Date: {new Date(transfer.transfer_date).toLocaleDateString()}
+                              </p>
+                              {transfer.notes && (
+                                <p className="text-sm text-muted-foreground mt-1">
+                                  Notes: {transfer.notes}
+                                </p>
+                              )}
+                              {transfer.blockchain_transaction_hash && (
+                                <p className="text-xs font-mono text-muted-foreground mt-1">
+                                  TX: {transfer.blockchain_transaction_hash}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                <div className="flex justify-end">
+                  <Button onClick={() => setShowBatchDetails(false)}>
+                    Close
+                  </Button>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </main>
     </div>
   );
