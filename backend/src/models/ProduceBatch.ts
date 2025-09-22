@@ -14,28 +14,28 @@ export enum BatchStatus {
 @Entity('produce_batches')
 export class ProduceBatch {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ unique: true })
-  batchId: string;
+  batchId!: string;
 
   @Column()
-  produceType: string;
+  produceType!: string;
 
   @Column()
-  origin: string;
+  origin!: string;
 
   @Column({ type: 'enum', enum: BatchStatus, default: BatchStatus.HARVESTED })
-  status: BatchStatus;
+  status!: BatchStatus;
 
   @Column({ type: 'decimal', precision: 18, scale: 2 })
-  currentPrice: number;
+  currentPrice!: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
-  quantity: number;
+  quantity!: number;
 
   @Column()
-  unit: string;
+  unit!: string;
 
   @Column({ nullable: true })
   description?: string;
