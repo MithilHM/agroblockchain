@@ -29,22 +29,39 @@ const roles = [
 ];
 
 export default function Login() {
+  const [isLogin, setIsLogin] = useState(true);
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const [formData, setFormData] = useState({
     name: '',
-    email: ''
+    email: '',
+    password: ''
   });
-  const { login } = useAuth();
+  const { login, register, isLoading } = useAuth();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedRole || !formData.name || !formData.email) return;
     
-    login({
-      name: formData.name,
-      email: formData.email,
-      role: selectedRole
+    if (isLogin) {
+      if (!formData.email || !formData.password) return;
+      await login(formData.email, formData.password);
+    } else {
+      if (!selectedRole || !formData.name || !formData.email || !formData.password) return;
+      await register(formData.email, formData.password, formData.name, selectedRole);
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      name: '',
+      email: '',
+      password: ''
     });
+    setSelectedRole(null);
+  };
+
+  const toggleMode = () => {
+    setIsLogin(!isLogin);
+    resetForm();
   };
 
   return (
@@ -67,41 +84,50 @@ export default function Login() {
 
         <Card className="shadow-medium bg-card/95 backdrop-blur">
           <CardHeader className="text-center">
-            <h2 className="text-2xl font-semibold">Choose Your Role</h2>
+            <h2 className="text-2xl font-semibold">
+              {isLogin ? 'Welcome Back' : 'Create Account'}
+            </h2>
             <CardDescription>
-              Select your role in the agricultural supply chain to get started
+              {isLogin 
+                ? 'Sign in to your agricultural supply chain account'
+                : 'Select your role in the agricultural supply chain to get started'
+              }
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleLogin} className="space-y-6">
-              {/* Role Selection */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {roles.map((role) => (
-                  <RoleCard
-                    key={role.id}
-                    title={role.title}
-                    description={role.description}
-                    icon={role.icon}
-                    selected={selectedRole === role.id}
-                    onClick={() => setSelectedRole(role.id)}
-                  />
-                ))}
-              </div>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Role Selection - Only for registration */}
+              {!isLogin && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {roles.map((role) => (
+                    <RoleCard
+                      key={role.id}
+                      title={role.title}
+                      description={role.description}
+                      icon={role.icon}
+                      selected={selectedRole === role.id}
+                      onClick={() => setSelectedRole(role.id)}
+                    />
+                  ))}
+                </div>
+              )}
 
               {/* User Information Form */}
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
-                    <Input
-                      id="name"
-                      type="text"
-                      placeholder="Enter your full name"
-                      value={formData.name}
-                      onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                      required
-                    />
-                  </div>
+                  {!isLogin && (
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Full Name</Label>
+                      <Input
+                        id="name"
+                        type="text"
+                        placeholder="Enter your full name"
+                        value={formData.name}
+                        onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                        required
+                      />
+                    </div>
+                  )}
                   <div className="space-y-2">
                     <Label htmlFor="email">Email Address</Label>
                     <Input
@@ -110,6 +136,17 @@ export default function Login() {
                       placeholder="Enter your email"
                       value={formData.email}
                       onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="Enter your password"
+                      value={formData.password}
+                      onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
                       required
                     />
                   </div>
@@ -122,11 +159,31 @@ export default function Login() {
                 variant="gradient"
                 size="lg"
                 className="w-full"
-                disabled={!selectedRole || !formData.name || !formData.email}
+                disabled={
+                  isLoading || 
+                  (isLogin 
+                    ? !formData.email || !formData.password
+                    : !selectedRole || !formData.name || !formData.email || !formData.password
+                  )
+                }
               >
-                Get Started
+                {isLoading ? 'Processing...' : (isLogin ? 'Sign In' : 'Get Started')}
                 <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
+
+              {/* Toggle between login and register */}
+              <div className="text-center">
+                <button
+                  type="button"
+                  onClick={toggleMode}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  {isLogin 
+                    ? "Don't have an account? Sign up"
+                    : "Already have an account? Sign in"
+                  }
+                </button>
+              </div>
             </form>
           </CardContent>
         </Card>
