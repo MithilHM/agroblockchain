@@ -5,16 +5,14 @@ dotenv.config();
 export const config = {
   // Application
   NODE_ENV: process.env.NODE_ENV || 'development',
-  PORT: parseInt(process.env.PORT || '3000'),
-  API_PREFIX: process.env.API_PREFIX || '/api/v1',
+  PORT: parseInt(process.env.PORT || '8001'),
+  API_PREFIX: process.env.API_PREFIX || '/api',
 
-  // Database
-  database: {
-    host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT || '5432'),
-    username: process.env.DB_USERNAME || 'postgres',
-    password: process.env.DB_PASSWORD || '',
-    name: process.env.DB_NAME || 'supplychain'
+  // Supabase
+  supabase: {
+    url: process.env.SUPABASE_URL || '',
+    anonKey: process.env.SUPABASE_ANON_KEY || '',
+    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || ''
   },
 
   // Blockchain
@@ -26,7 +24,7 @@ export const config = {
 
   // JWT
   jwt: {
-    secret: process.env.JWT_SECRET || 'default-secret',
+    secret: process.env.JWT_SECRET || 'blockchain-supply-chain-secret-key-2024',
     expire: process.env.JWT_EXPIRE || '24h'
   },
 
@@ -61,10 +59,10 @@ export const config = {
 };
 
 // Validate required environment variables
-const requiredVars = ['JWT_SECRET', 'DB_PASSWORD'];
+const requiredVars = ['SUPABASE_URL', 'SUPABASE_ANON_KEY', 'JWT_SECRET'];
 
 if (config.NODE_ENV === 'production') {
-  requiredVars.push('RPC_URL', 'CONTRACT_ADDRESS', 'AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY');
+  requiredVars.push('SUPABASE_SERVICE_ROLE_KEY', 'RPC_URL', 'CONTRACT_ADDRESS');
 }
 
 for (const varName of requiredVars) {
