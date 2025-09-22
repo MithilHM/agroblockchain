@@ -2,7 +2,7 @@ import { DataSource } from 'typeorm';
 import { config } from './env';
 import { User } from '../models/User';
 import { ProduceBatch } from '../models/ProduceBatch';
-import { AuditLog } from '../models/AuditLog';
+import { AuditLog } from '../models/Auditlog';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
