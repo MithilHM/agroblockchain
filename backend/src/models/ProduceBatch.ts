@@ -64,23 +64,23 @@ export class ProduceBatch {
 
   @ManyToOne(() => User, user => user.batches)
   @JoinColumn({ name: 'currentOwnerId' })
-  currentOwner: User;
+  currentOwner!: User;
 
   @Column()
-  currentOwnerId: string;
+  currentOwnerId!: string;
 
   @Column()
-  originalFarmerId: string;
+  originalFarmerId!: string;
 
   @Column({ type: 'text', array: true, default: [] })
-  transferHistory: string[];
+  transferHistory!: string[];
 
   @OneToMany(() => AuditLog, log => log.batch)
-  auditLogs: AuditLog[];
+  auditLogs!: AuditLog[];
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }
