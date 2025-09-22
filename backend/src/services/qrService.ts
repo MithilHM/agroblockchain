@@ -1,10 +1,10 @@
 import { AppDataSource } from '../config/db';
 import { ProduceBatch } from '../models/ProduceBatch';
 import { config } from '../config/env';
-import QRCode from 'qrcode';
+import * as QRCode from 'qrcode';
 import { logger } from '../utils/logger';
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
 export class QRService {
