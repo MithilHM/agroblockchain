@@ -78,6 +78,29 @@ INSERT INTO users (email, password_hash, name, role, status)
 VALUES ('regulator@agrichain.com', '$2a$10$8Xk9lP3Qv6uJr2tS4Hf7Z.M8nW2bC1vT5yR9qX0pK4jL6aE3sN8wG', 'Supply Chain Regulator', 'regulator', 'active')
 ON CONFLICT (email) DO NOTHING;
 
+-- Create batch_offers table for multiple distributor selection
+CREATE TABLE IF NOT EXISTS batch_offers (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  offer_id VARCHAR(100) UNIQUE NOT NULL,
+  batch_id UUID REFERENCES produce_batches(id) ON DELETE CASCADE,
+  farmer_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  distributor_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  offer_price DECIMAL(10,2) NOT NULL,
+  counter_price DECIMAL(10,2),
+  status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'rejected', 'countered', 'cancelled')),
+  expiry_time TIMESTAMP WITH TIME ZONE NOT NULL,
+  notes TEXT,
+  response_notes TEXT,
+  responded_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create indexes for batch_offers
+CREATE INDEX IF NOT EXISTS idx_batch_offers_batch_id ON batch_offers(batch_id);
+CREATE INDEX IF NOT EXISTS idx_batch_offers_farmer_id ON batch_offers(farmer_id);
+CREATE INDEX IF NOT EXISTS idx_batch_offers_distributor_id ON batch_offers(distributor_id);
+CREATE INDEX IF NOT EXISTS idx_batch_offers_status ON batch_offers(status);
+
 -- Insert some default system settings
 INSERT INTO system_settings (setting_key, setting_value, description) VALUES
   ('quality_check_required', 'true', 'Whether quality checks are mandatory for batch transfers'),
