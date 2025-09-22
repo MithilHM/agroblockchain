@@ -7,6 +7,7 @@ import adminRoutes from './adminRoutes';
 import notificationRoutes from './notificationRoutes';
 import { walletRoutes } from './walletRoutes';
 import { geoRoutes } from './geoRoutes';
+import { distributorRoutes } from './distributorRoutes';
 
 export function RegisterRoutes(app: Express) {
   app.use('/api/batch', batchRoutes);
@@ -15,4 +16,5 @@ export function RegisterRoutes(app: Express) {
   app.use('/api/notifications', notificationRoutes);
   app.use('/api/wallet', walletRoutes);
   app.use('/api/geo', geoRoutes);
+  app.use('/api/distributor', distributorRoutes);
 }
