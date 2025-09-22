@@ -1,9 +1,8 @@
-import { Response } from 'express';
-import { AuthenticatedRequest } from '../middlewares/auth';
+import { Request, Response } from 'express';
 import { logger } from '../utils/logger';
 
 export class BatchController {
-  async registerBatch(req: AuthenticatedRequest, res: Response): Promise<void> {
+  async registerBatch(req: Request, res: Response): Promise<void> {
     try {
       const { produceType, origin, currentPrice, quantity, unit } = req.body;
 
@@ -24,7 +23,7 @@ export class BatchController {
         }
       });
 
-      logger.info(`Batch registered: ${batchId} by user ${req.user?.id}`);
+      logger.info(`Batch registered: ${batchId} by user ${(req as any).user?.userId}`);
     } catch (error) {
       logger.error('Batch registration error:', error);
       res.status(500).json({
@@ -34,7 +33,7 @@ export class BatchController {
     }
   }
 
-  async getBatch(req: AuthenticatedRequest, res: Response): Promise<void> {
+  async getBatch(req: Request, res: Response): Promise<void> {
     try {
       const { batchId } = req.params;
 
