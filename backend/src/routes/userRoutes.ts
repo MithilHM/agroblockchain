@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { userController } from '../controllers/userController';
-import { authenticate } from '../middlewares/auth';
+import { auth } from '../middlewares/auth';
 
 const router = Router();
 
@@ -9,7 +9,8 @@ router.post('/register', userController.register.bind(userController));
 router.post('/login', userController.login.bind(userController));
 
 // Protected routes
-router.get('/profile', authenticate, userController.getProfile.bind(userController));
-router.put('/profile', authenticate, userController.updateProfile.bind(userController));
+router.get('/profile', auth, userController.getProfile.bind(userController));
+router.put('/profile', auth, userController.updateProfile.bind(userController));
+router.get('/dashboard-stats', auth, userController.getDashboardStats.bind(userController));
 
 export default router;
