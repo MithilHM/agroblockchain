@@ -7,7 +7,7 @@ export type UserRole = 'farmer' | 'distributor' | 'retailer';
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
-  register: (email: string, password: string, name: string, role: UserRole) => Promise<boolean>;
+  register: (email: string, password: string, name: string, role: UserRole, wallet_address?: string) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
   isLoading: boolean;
