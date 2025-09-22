@@ -152,6 +152,18 @@ export default function Login() {
                       required
                     />
                   </div>
+                  {!isLogin && (
+                    <div className="space-y-2">
+                      <Label htmlFor="wallet_address">Wallet Address (Optional)</Label>
+                      <Input
+                        id="wallet_address"
+                        type="text"
+                        placeholder="Enter your blockchain wallet address"
+                        value={formData.wallet_address}
+                        onChange={(e) => setFormData(prev => ({ ...prev, wallet_address: e.target.value }))}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
 
