@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import { geoController } from '../controllers/geoController';
-import { authenticateToken } from '../middlewares/auth';
+import { authenticate } from '../middlewares/auth';
 
 const router = Router();
 
 // Apply authentication middleware to all geo routes
-router.use(authenticateToken);
+router.use(authenticate);
 
 // POST /api/geo/batch/:batchId/location - Add geolocation to batch
 router.post('/batch/:batchId/location', geoController.addBatchGeolocation.bind(geoController));
