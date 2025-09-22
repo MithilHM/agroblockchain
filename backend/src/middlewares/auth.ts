@@ -1,15 +1,27 @@
-// src/middlewares/auth.ts
-
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { config } from '../config/env';
 import { AppError } from './errorHandler';
 import { logger } from '../utils/logger';
 
 interface JwtPayload {
-  id: string;
+  userId: string;
+  email: string;
   role: string;
   iat: number;
   exp: number;
+}
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        userId: string;
+        email: string;
+        role: string;
+      };
+    }
+  }
 }
 
 /**
@@ -30,16 +42,12 @@ export const authenticate = (
 
     const token = authHeader.split(' ')[1];
 
-    if (!process.env.JWT_SECRET) {
-      logger.error('JWT_SECRET is not defined in environment variables.');
-      throw new AppError('Server configuration error.', 500);
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
+    const decoded = jwt.verify(token, config.jwt.secret) as JwtPayload;
 
     // Attach user information to the request object
     req.user = {
-      id: decoded.id,
+      userId: decoded.userId,
+      email: decoded.email,
       role: decoded.role,
     };
 
@@ -50,4 +58,15 @@ export const authenticate = (
     }
     next(error);
   }
+};
+
+/**
+ * Generate JWT token for user
+ */
+export const generateToken = (userId: string, email: string, role: string): string => {
+  return jwt.sign(
+    { userId, email, role },
+    config.jwt.secret,
+    { expiresIn: config.jwt.expire }
+  );
 };
